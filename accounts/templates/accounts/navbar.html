@@ -1,0 +1,14 @@
+    <div class="navbar">
+        <div class="brand">AdornTech LMS</div>
+        <div class="user-info">
+            {% static 'images/default_profile.png' as default_profile %}
+            {% if student.profile_picture %}
+                <img src="{{ student.profile_picture.url }}" alt="Profile">
+            {% else %}
+                <img src="{{ default_profile }}" alt="Profile">
+            {% endif %}
+            <span>{{ student.username }}</span>
+            <a href="{% url 'student-profile' %}">Profile</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>

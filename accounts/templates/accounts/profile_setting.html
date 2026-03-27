@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %}AdornTech LMS{% endblock %}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/profile_setting.css' %}">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <div class="brand">AdornTech LMS</div>
+    <ul>
+        <li><a href="{% url 'student-dashboard' %}">Dashboard</a></li>
+        <li><a href="{% url 'student-courses' %}">My Courses</a></li>
+        <li><a href="{% url 'student-settings' %}">Settings</a></li>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+</nav>
+
+<!-- Main Content -->
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+</body>
+</html>

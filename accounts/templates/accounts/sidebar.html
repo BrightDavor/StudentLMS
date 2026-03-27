@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | AdornTech LMS</title>
+    <link rel="stylesheet" href="{% static 'css/sidebar_navbar.css' %}">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="brand">AdornTech LMS</div>
+        <div class="user-info">
+            <a href="{% url 'student-profile' %}">
+                {% if request.user.profile_picture %}
+                    <img src="{{ request.user.profile_picture.url }}" 
+                         alt="Profile" 
+                         style="width:40px; height:40px; border-radius:50%;">
+                {% else %}
+                    <img src="{% static 'images/default_profile.png' %}" 
+                         alt="Default Profile" 
+                         style="width:40px; height:40px; border-radius:50%;">
+                {% endif %}
+            </a>
+            <span>{{ request.user.username }}</span>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <li>
+                <a href="{% url 'student-dashboard' %}">Dashboard</a>
+                <ul class="dropdown">
+                    {% for enrollment in enrolled_courses %}
+                        <li>
+                            {{ enrollment.course.title }}<br>
+                            <a class="course-link" href="{% url 'course-detail' enrollment.course.id %}">View Lessons</a>
+                        </li>
+                    {% empty %}
+                        <li>No courses enrolled yet</li>
+                    {% endfor %}
+                </ul>
+            </li>
+
+            <li><a href="{% url 'student-courses' %}">My Courses</a></li>
+            <li><a href="{% url 'add-course' %}">Add Course</a></li>
+            <li><a href="{% url 'student-results' %}">Results</a></li>
+            <li><a href="{% url 'student-certificates' %}">Certificates</a></li>
+            <li><a href="{% url 'student-chat' %}">Chat</a></li>
+            <li><a href="{% url 'student-notifications' %}">Notifications</a></li>
+            <li><a href="{% url 'student-settings' %}">Settings</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </div>
+
+    <div>
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>

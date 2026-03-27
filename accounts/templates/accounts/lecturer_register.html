@@ -1,0 +1,183 @@
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Registration</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+        }
+
+        /* Navbar */
+        nav {
+            background: #04AA6D;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        nav .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        nav .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 15px;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        nav .nav-links a:hover {
+            background: white;
+            color: #04AA6D;
+        }
+
+        /* Container */
+        .container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+            margin: 40px auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        form div {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            transition: 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #04AA6D;
+            outline: none;
+            box-shadow: 0 0 5px rgba(4,170,109,0.3);
+        }
+
+        button {
+            width: 100%;
+            background: #04AA6D;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #038556;
+        }
+
+        .messages {
+            margin-top: 10px;
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .links a {
+            color: #04AA6D;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 5px;
+            transition: 0.3s;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">AdornTech LMS</div>
+        <div class="nav-links">
+            <a href="{% url 'lecturer-login' %}">Login</a>
+        </div>
+    </nav>
+
+    <!-- Registration Form -->
+    <div class="container">
+        <h2>Lecturer Registration</h2>
+        <form method="post" id="registerForm">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Register</button>
+        </form>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="links">
+            <p>Already have an account? <a href="{% url 'lecturer-login' %}">Login here</a></p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            let valid = true;
+            this.querySelectorAll('input').forEach(input => {
+                if(input.value.trim() === '') {
+                    valid = false;
+                }
+            });
+            if(!valid) {
+                e.preventDefault();
+                alert('Please fill in all fields.');
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

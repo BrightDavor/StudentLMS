@@ -1,0 +1,18 @@
+<form method="POST">
+    {% csrf_token %}
+    <label>Title:</label>
+    <input type="text" name="title" required>
+
+    <label>Description:</label>
+    <textarea name="description" required></textarea>
+
+    <label>Program:</label>
+    <select name="program" required>
+        <option value="">Select a program</option>
+        {% for p in programs %}
+            <option value="{{ p.id }}">{{ p.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Create Course</button>
+</form>

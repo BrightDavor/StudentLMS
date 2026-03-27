@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Course Message</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h2>Edit Message in {{ message.course.title }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <textarea name="message" rows="4" cols="50">{{ message.message }}</textarea><br><br>
+        <button type="submit">Save Changes</button>
+        <a href="{% url 'course-chat' message.course.id %}">Cancel</a>
+    </form>
+    <div>
+    {% for msg in messages %}
+  <p>{{ msg.user.username }}: {{ msg.message }} {% if msg.user == request.user %}
+    <a href="{% url 'edit-course-message' msg.id %}">Edit</a>
+    <a href="{% url 'delete-course-message' msg.id %}">Delete</a>
+  {% endif %}</p>
+{% endfor %}
+
+</div>
+</body>
+</html>

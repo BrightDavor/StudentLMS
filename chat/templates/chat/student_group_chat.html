@@ -1,0 +1,30 @@
+{% extends 'accounts/sidebar.html' %}
+{% load static %}
+
+{% block title %}Group Chat | AdornTech LMS{% endblock %}
+
+{% block content %}
+<div class="main">
+    <div class="card">
+        <h2>Group Chat (Students)</h2>
+
+        <div class="chat-box">
+            {% for msg in messages %}
+                <div class="message">
+                    <strong>{{ msg.sender.username }}:</strong> {{ msg.content }}
+                    <span class="timestamp">{{ msg.timestamp|date:"M d, Y H:i" }}</span>
+                </div>
+            {% empty %}
+                <p>No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+
+<<form method="post" action="{% url 'send-group-message' group_name=group_name %}">
+    {% csrf_token %}
+    <textarea name="message" placeholder="Type your message..."></textarea>
+    <button type="submit">Send</button>
+</form>
+
+    </div>
+</div>
+{% endblock %}

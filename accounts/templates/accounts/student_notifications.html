@@ -1,0 +1,40 @@
+{% extends 'accounts/sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="main">
+    <div class="card">
+        <h2 class="mb-4">Notifications</h2>
+
+        {% if notifications %}
+            <ul style="list-style-type:none; padding:0;">
+                {% for notification in notifications %}
+                    <li 
+                        style="
+                            background-color:{% if not notification.is_read %}#f0f8ff{% else %}#fff{% endif %};
+                            margin-bottom:10px;
+                            padding:12px 15px;
+                            border-radius:10px;
+                            border:1px solid #ddd;
+                        "
+                    >
+                        <strong>{{ notification.title }}</strong><br>
+                        <span>{{ notification.message }}</span><br>
+                        <small style="color:gray;">
+                            {{ notification.created_at|date:"M d, Y - h:i A" }}
+                        </small>
+
+                        {% if notification.link %}
+                            <div style="margin-top:5px;">
+                                <a href="{{ notification.link }}" class="btn btn-sm btn-primary">View Details</a>
+                            </div>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No notifications at the moment.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'accounts/student_login_navbar.html' %}
+{% load static %}
+
+
+{% block content %}
+    <!-- Registration Form -->
+    <div class="registration-container">
+        <h2>Student Registration</h2>
+
+        {% if error %}
+            <p class="error-msg">{{ error }}</p>
+        {% endif %}
+
+        <form id="studentForm" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Register</button>
+        </form>
+    
+{% endblock  %}
+    
+
+

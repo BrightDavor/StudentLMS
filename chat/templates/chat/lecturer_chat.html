@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lecturer Chat</title>
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+        }
+        .navbar {
+            background: #2575fc;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-container {
+            display: flex;
+            height: 90vh;
+        }
+        .chat-sidebar {
+            width: 250px;
+            background: #2d3748;
+            color: white;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .chat-main {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-messages {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        .chat-input {
+            display: flex;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .chat-input button {
+            padding: 10px 15px;
+            background: #2575fc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        .chat-input button:hover {
+            background: #1a5fd0;
+        }
+        .chat-user {
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .chat-user:hover {
+            background: #4a5568;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div>Lecturer Chat</div>
+        <div>
+            <a href="{% url 'lecturer-dashboard' %}" style="color:white; text-decoration:none;">Dashboard</a>
+            |
+            <a href="{% url 'logout' %}" style="color:white; text-decoration:none;">Logout</a>
+        </div>
+    </div>
+
+    <!-- Chat Layout -->
+    <div class="chat-container">
+        <!-- Sidebar: Users / Groups -->
+        <div class="chat-sidebar">
+            <h3>Chats</h3>
+            <div class="chat-user">Group Chat (Students)</div>
+            <div class="chat-user">Private Chat: Student A</div>
+            <div class="chat-user">Private Chat: Student B</div>
+            <div class="chat-user">Private Chat: Student C</div>
+            <!-- You can dynamically generate users/groups using Django -->
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main">
+            <div class="chat-messages">
+                <!-- Messages will appear here -->
+                <p><strong>Student A:</strong> Hello, lecturer!</p>
+                <p><strong>Lecturer:</strong> Hello, how can I help you?</p>
+            </div>
+
+            <div class="chat-input">
+                <input type="text" placeholder="Type a message..." />
+                <button>Send</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

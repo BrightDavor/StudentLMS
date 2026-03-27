@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Enrolled Courses</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-center text-blue-700">🎓 My Enrolled Courses</h1>
+
+    {% if enrollments %}
+      <div class="grid md:grid-cols-3 sm:grid-cols-2 gap-6">
+        {% for enrollment in enrollments %}
+          <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-xl transition-all duration-300">
+            <img src="{% if enrollment.course.image %}{{ enrollment.course.image.url }}{% else %}{% static 'images/default-course.jpg' %}{% endif %}" 
+                 alt="{{ enrollment.course.title }}" 
+                 class="w-full h-40 object-cover rounded-lg mb-4">
+            
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">{{ enrollment.course.title }}</h2>
+            <p class="text-gray-600 text-sm mb-3">{{ enrollment.course.description|truncatewords:20 }}</p>
+
+            <p class="text-sm text-gray-500 mb-3">
+              <strong>Lecturer:</strong> {{ enrollment.course.lecturer.get_full_name|default:enrollment.course.lecturer.username }}
+            </p>
+
+            <div class="flex justify-between items-center">
+              <a href="{% url 'course-detail' enrollment.course.id %}" 
+                 class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                View Course
+              </a>
+              <a href="{% url 'private-chat' enrollment.course.lecturer.id %}" 
+                 class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+                Chat Lecturer
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center mt-10">
+        <p class="text-gray-500 text-lg">You haven’t enrolled in any courses yet.</p>
+        <a href="{% url 'course-list' %}" class="text-blue-600 hover:underline mt-2 inline-block">Browse Available Courses</a>
+      </div>
+    {% endif %}
+  </div>
+
+  
+</body>
+</html>

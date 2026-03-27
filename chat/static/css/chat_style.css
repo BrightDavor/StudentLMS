@@ -1,0 +1,82 @@
+/* Chat container */
+.chat-container {
+    width: 80%;
+    max-width: 900px;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+}
+
+/* Chat box */
+.chat-box {
+    flex: 1;
+    overflow-y: scroll;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    margin-bottom: 10px;
+}
+
+/* Messages */
+.chat-box p {
+    margin: 5px 0;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+
+.chat-box p:nth-child(odd) {
+    background: #e1f5fe;  /* light blue for others */
+}
+
+.chat-box p:nth-child(even) {
+    background: #c8e6c9;  /* light green for self messages */
+    text-align: right;
+}
+
+/* Chat input area */
+.chat-inputs {
+    display: flex;
+    gap: 5px;
+}
+
+.chat-inputs input[type="text"] {
+    flex: 2;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.chat-inputs input[type="file"], .chat-inputs select {
+    flex: 1;
+}
+
+.chat-inputs button {
+    padding: 8px 12px;
+    border: none;
+    background: #2196f3;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.chat-inputs button:hover {
+    background: #1976d2;
+}
+
+/* Online status */
+.online-dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.online { background-color: green; }
+.offline { background-color: gray; }

@@ -1,0 +1,34 @@
+{% extends 'accounts/profile_setting.html' %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile_setting.css' %}">
+    
+<!-- Navbar -->
+
+<!-- Profile Card -->
+<div class="profile-card">
+    <h2>{{ student.get_full_name|default:student.username }}</h2>
+
+   <div class="profile">
+    {% if request.user.profile_picture %}
+        <img src="{{ request.user.profile_picture.url }}" alt="Profile Picture">
+    {% else %}
+        <img src="{% static 'images/default_profile.png' %}" alt="Default Profile Picture">
+    {% endif %}
+    <p>{{ request.user.username }}</p>
+</div>
+    <div class="profile-info">
+        <p><strong>Email:</strong> {{ student.email }}</p>
+        <p><strong>User Type:</strong> {{ student.user_type }}</p>
+        <p><strong>Bio:</strong> {{ student.bio|default:"No bio added." }}</p>
+        <p><strong>Nationality:</strong> {{ student.nationality|default:"N/A" }}</p>
+        <p><strong>Date of Birth:</strong> {{ student.date_of_birth|default:"N/A" }}</p>
+        <p><strong>Gender:</strong> {{ student.gender|default:"N/A" }}</p>
+        <p><strong>Language:</strong> {{ student.language|default:"English" }}</p>
+        <p><strong>Theme:</strong> {{ student.theme|default:"light" }}</p>
+    </div>
+</div>
+    <div>{% include 'accounts/footer.html' %}</div>
+{% endblock  %}

@@ -1,0 +1,76 @@
+{% extends 'accounts/sidebar.html' %}
+
+{% load static %}
+
+{% block content %}
+<!-- Main content -->
+<div class="main">
+    <!-- Welcome Card -->
+    <div class="card">
+        <h2>Welcome, {{ student.username }}!</h2>
+        <p>Here you can see your enrolled courses, lessons, results, certificates, notifications, and access the chat system.</p>
+    </div>
+
+    <!-- Enrolled Courses -->
+    <div class="card">
+        <h3>Your Enrolled Courses</h3>
+        <div class="container">
+            {% if lessons %}
+                <ul class="lessons-list">
+                    {% for lesson in lessons %}
+                        <li>
+                            <h3>{{ lesson.title }}</h3>
+
+                            {% if lesson.content %}
+                                <p>{{ lesson.content }}</p>
+                            {% endif %}
+
+                            {% if lesson.materials.all %}
+                                {% for material in lesson.materials.all %}
+                                    {% if material.file.url|slice:"-4"|lower == ".mp4" %}
+                                        <video controls>
+                                            <source src="{{ material.file.url }}" type="video/mp4">
+                                            Your browser does not support video playback.
+                                        </video>
+                                    {% elif material.file.url|slice:"-4"|lower == ".pdf" %}
+                                        <p><a href="{{ material.file.url }}" target="_blank" class="pdf-link">📄 View PDF</a></p>
+                                    {% elif material.file.url|slice:"-4"|lower == ".mp3" %}
+                                        <audio controls>
+                                            <source src="{{ material.file.url }}" type="audio/mpeg">
+                                            Your browser does not support audio playback.
+                                        </audio>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <p>No materials uploaded for this lesson yet.</p>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No lessons available yet.</p>
+            {% endif %}
+
+            {% if lecturer %}
+                <a href="{% url 'private-chat' lecturer.id %}" class="chat-button">💬 Chat with Lecturer</a>
+            {% else %}
+                <p style="text-align:center; color:#999;">No lecturer assigned for this course yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div>
+        {% include 'accounts/footer.html' %}
+    </div>
+</div>
+
+<script>
+    // Toggle dropdown safely
+    const menu = document.getElementById("coursesMenu");
+    if(menu){
+        menu.addEventListener("click", () => {
+            menu.classList.toggle("active");
+        });
+    }
+</script>
+{% endblock %}

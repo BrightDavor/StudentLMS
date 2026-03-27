@@ -1,0 +1,31 @@
+{% extends 'accounts/sidebar.html' %}
+{% load static %}
+
+{% block title %}Chat | AdornTech LMS{% endblock %}
+
+{% block content %}
+<div class="main">
+    <div class="card">
+        <h2>Chat</h2>
+        <p>Select a chat type:</p>
+        <ul>
+            <li>
+                <a href="{% url 'student-group-chat' group_name='Students' %}">Group Chat</a>
+            </li>
+            <li>Private Lecturer Chats:
+                <ul>
+                    {% for lecturer in lecturers %}
+                        {% if lecturer.id %}
+                            <li>
+                                <a href="{% url 'private-chat' user_id=lecturer.id %}">{{ lecturer.username }}</a>
+                            </li>
+                        {% endif %}
+                    {% empty %}
+                        <li>No lecturers available for private chat.</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

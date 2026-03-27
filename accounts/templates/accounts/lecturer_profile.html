@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Profile | AdornTech LMS</title>
+    <link rel="stylesheet" href="{% static 'css/profile_setting.css' %}">
+</head>
+<body>
+
+<div class="main">
+    <div class="card">
+        <h2>Lecturer Profile</h2>
+
+        <!-- Profile Picture -->
+        <img id="profilePreview" 
+             src="{% if request.user.profile_picture %}{{ request.user.profile_picture.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" 
+             alt="Profile Picture" 
+             style="max-width:150px; border-radius:50%; margin-bottom:10px;">
+
+        <form id="profileForm" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label>Profile Picture:</label>
+            <input type="file" name="profile_picture" id="profileImageInput"><br><br>
+
+            <label>Full Name:</label>
+            <input type="text" name="full_name" value="{{ request.user.get_full_name }}"><br><br>
+
+            <label>Bio:</label>
+            <textarea name="bio">{{ request.user.bio }}</textarea><br><br>
+
+            <label>Nationality:</label>
+            <input type="text" name="nationality" value="{{ request.user.nationality }}"><br><br>
+
+            <label>Date of Birth:</label>
+            <input type="date" name="date_of_birth" value="{{ request.user.date_of_birth|default_if_none:'' }}"><br><br>
+
+            <label>Gender:</label>
+            <input type="text" name="gender" value="{{ request.user.gender }}"><br><br>
+
+            <button type="submit">Save Profile</button>
+        </form>
+    </div>
+</div>
+
+<script>
+const profileForm = document.getElementById('profileForm');
+const profileInput = document.getElementById('profileImageInput');
+const profilePreview = document.getElementById('profilePreview');
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+// Preview selected image
+profileInput.addEventListener('change', () => {
+    const file = profileInput.files[0];
+    if(file){
+        profilePreview.src = URL.createObjectURL(file);
+    }
+});
+
+// Submit form via AJAX
+profileForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(profileForm);
+
+    fetch("{% url 'lecturer-profile' %}", {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrftoken
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success){
+            alert('Profile updated successfully!');
+            window.location.href = "{% url 'lecturer-dashboard' %}";
+        } else {
+            alert('Failed to update profile');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+</script>
+
+</body>
+</html>

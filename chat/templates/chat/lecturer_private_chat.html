@@ -1,0 +1,15 @@
+<h2>Chat with {{ student.username }}</h2>
+
+<div id="chat-box">
+    {% for msg in messages %}
+        <p><strong>{{ msg.sender.username }}:</strong> {{ msg.content }} <small>{{ msg.timestamp }}</small></p>
+    {% empty %}
+        <p>No messages yet.</p>
+    {% endfor %}
+</div>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="content" placeholder="Type your message" required>
+    <button type="submit">Send</button>
+</form>

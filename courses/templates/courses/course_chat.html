@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ course.title }} Chat</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #eef2f5; }
+        h1 { color: #333; }
+        .chat-container { background: #fff; padding: 20px; border-radius: 8px; max-width: 700px; margin: auto; }
+        .message { border-bottom: 1px solid #ddd; padding: 10px 0; }
+        .message strong { color: #007bff; }
+        form textarea { width: 100%; padding: 8px; border-radius: 5px; }
+        form button { margin-top: 5px; padding: 8px 12px; border: none; background: #007bff; color: #fff; border-radius: 5px; cursor: pointer;}
+    </style>
+</head>
+<body>
+    <h1>{{ course.title }} Chat</h1>
+    <div class="chat-container">
+        {% for msg in messages %}
+            <div class="message">
+                <strong>{{ msg.user.username }}:</strong> {{ msg.message }}
+                {% if msg.file %}
+                    <br><a href="{{ msg.file.url }}" target="_blank">View File</a>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>No messages yet.</p>
+        {% endfor %}
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <textarea name="message" placeholder="Type your message here..."></textarea><br>
+            <input type="file" name="file"><br>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</body>
+</html>

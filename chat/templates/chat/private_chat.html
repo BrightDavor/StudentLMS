@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Private Chat with {{ receiver.username }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .message { padding: 8px; margin-bottom: 5px; border-radius: 5px; }
+        .sent { background: #d1ffd1; text-align: right; }
+        .received { background: #f0f0f0; text-align: left; }
+        .actions { font-size: 0.8em; margin-left: 5px; }
+    </style>
+</head>
+<body>
+<h2>Chat with {{ receiver.username }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <textarea name="content" rows="3" placeholder="Type your message..." required></textarea><br>
+    <button type="submit">Send</button>
+</form>
+
+<hr>
+
+<div>
+    {% for msg in messages %}
+        <div class="message {% if msg.sender == request.user %}sent{% else %}received{% endif %}">
+            <strong>{{ msg.sender.username }}:</strong> {{ msg.content }}
+            {% if msg.sender == request.user %}
+                <span class="actions">
+                    <a href="{% url 'edit-message' msg.id %}">✏️ Edit</a> |
+                    <a href="{% url 'delete-message' msg.id %}" onclick="return confirm('Are you sure?');">🗑 Delete</a>
+                </span>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No messages yet. Say hello! 👋</p>
+    {% endfor %}
+</div>
+
+</body>
+</html>

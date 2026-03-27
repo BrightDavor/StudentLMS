@@ -1,0 +1,49 @@
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/footer.css'%}">
+<footer class="site-footer">
+    <div class="footer-container">
+
+        <!-- Contact Info -->
+        <div class="footer-section footer-contact">
+            <h4>Contact Us</h4>
+            <p>Email: support@adorntech.com</p>
+            <p>Phone: +233 123 456 789</p>
+            <p>Office: Accra, Ghana</p>
+            <a href="{% url 'contact-us' %}">Contact Us Page</a>
+        </div>
+
+        <!-- Quick Links / About -->
+        <div class="footer-section footer-links">
+            <h4>Quick Links</h4>
+            <a href="{% url 'about-us' %}">About Us</a>
+            <a href="{% url 'contact-us' %}">Contact Us</a>
+        </div>
+
+        <!-- Social Links -->
+        <div class="footer-section footer-social">
+            <h4>Follow Us</h4>
+            <a href="https://facebook.com" target="_blank">Facebook</a>
+            <a href="https://twitter.com" target="_blank">Twitter</a>
+            <a href="https://instagram.com" target="_blank">Instagram</a>
+            <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="footer-section footer-newsletter">
+            <h4>Subscribe to Newsletter</h4>
+            <form action="{% url 'subscribe-newsletter' %}" method="post">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="Enter your email" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2025 AdornTech LMS. All rights reserved.</p>
+    </div>
+</footer>
+{% endblock %}

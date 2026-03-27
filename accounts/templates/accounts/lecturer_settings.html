@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Settings | AdornTech LMS</title>
+    <link rel="stylesheet" href="{% static 'css/profile_setting.css' %}">
+</head>
+<body>
+
+<div class="main">
+    <div class="card">
+        <h2>Settings</h2>
+
+        <form id="settingsForm" method="POST">
+            {% csrf_token %}
+
+            <label>Theme:</label>
+            <select name="theme" id="themeSelect">
+                <option value="light" {% if request.user.theme == 'light' %}selected{% endif %}>Light</option>
+                <option value="dark" {% if request.user.theme == 'dark' %}selected{% endif %}>Dark</option>
+            </select><br><br>
+
+            <label>Language:</label>
+            <select name="language" id="languageSelect">
+                <option value="English" {% if request.user.language == 'English' %}selected{% endif %}>English</option>
+                <option value="French" {% if request.user.language == 'French' %}selected{% endif %}>French</option>
+            </select><br><br>
+
+            <button type="submit">Save Settings</button>
+        </form>
+    </div>
+</div>
+
+<script>
+const settingsForm = document.getElementById('settingsForm');
+const themeSelect = document.getElementById('themeSelect');
+const languageSelect = document.getElementById('languageSelect');
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+// Apply theme and language instantly
+themeSelect.addEventListener('change', () => {
+    document.body.setAttribute('data-theme', themeSelect.value);
+});
+
+languageSelect.addEventListener('change', () => {
+    document.body.setAttribute('data-language', languageSelect.value);
+});
+
+// Submit form via AJAX
+settingsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(settingsForm);
+
+    fetch("{% url 'lecturer-settings' %}", {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrftoken
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success){
+            alert('Settings updated successfully!');
+            window.location.href = "{% url 'lecturer-dashboard' %}";
+        } else {
+            alert('Failed to update settings');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+</script>
+
+<style>
+/* Theme Styles */
+body[data-theme="light"] {
+    background-color: #f9f9f9;
+    color: #333;
+}
+body[data-theme="dark"] {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+}
+</style>
+
+</body>
+</html>

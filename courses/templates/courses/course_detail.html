@@ -1,0 +1,77 @@
+{% extends 'accounts/sidebar.html' %}
+{% load static %}
+{% load file_filters %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/course_detail.css' %}">
+
+<div class="container">
+    <h1>{{ course.title }}</h1>
+
+    {% if course.description %}
+        <p>{{ course.description }}</p>
+    {% endif %}
+
+    <h2>Lessons</h2>
+    {% if lessons %}
+        <ul class="lessons-list">
+            {% for lesson in lessons %}
+                <li>
+                    <h3>{{ lesson.title }}</h3>
+                    {% if lesson.content %}
+                        <p>{{ lesson.content }}</p>
+                    {% endif %}
+
+                    {% if lesson.materials.all %}
+                        {% for material in lesson.materials.all %}
+                            {% if material.file %}
+                                {% if material.file.url|is_pdf %}
+                                    <p><a href="{{ material.file.url }}" target="_blank">📄 {{ material.title }}</a></p>
+                                {% elif material.file.url|is_video %}
+                                    <video controls width="480">
+                                        <source src="{{ material.file.url }}" type="video/mp4">
+                                    </video>
+                                {% elif material.file.url|is_audio %}
+                                    <audio controls>
+                                        <source src="{{ material.file.url }}" type="audio/mpeg">
+                                    </audio>
+                                {% elif material.file.url|is_image %}
+                                    <img src="{{ material.file.url }}" alt="{{ material.title }}" style="max-width:100%; border-radius:8px; margin-top:10px;">
+                                {% else %}
+                                    <p><a href="{{ material.file.url }}" download>⬇️ Download {{ material.title }}</a></p>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p style="color:#999;">No materials uploaded for this lesson yet.</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No lessons added yet.</p>
+    {% endif %}
+
+    <h2>Lecturer</h2>
+    {% if course.lecturer %}
+        <div style="display:flex; align-items:center; margin-top:15px;">
+            <div style="margin-right:10px;">
+                {% if course.lecturer.profile_picture %}
+                    <img src="{{ course.lecturer.profile_picture.url }}" alt="{{ course.lecturer.username }}" width="60" height="60" style="border-radius:50%;">
+                {% else %}
+                    <img src="{% static 'images/default-profile.png' %}" alt="Default profile" width="60" height="60" style="border-radius:50%;">
+                {% endif %}
+            </div>
+            <div>
+                <p>{{ course.lecturer.get_full_name|default:course.lecturer.username }}</p>
+                <a href="{% url 'private-chat' course.lecturer.id %}" class="chat-button">💬 Chat with Lecturer</a>
+            </div>
+        </div>
+    {% else %}
+        <p style="text-align:center; color:#999;">No lecturer assigned for this course yet.</p>
+    {% endif %}
+</div>
+
+<div>{% include 'accounts/footer.html' %}</div>
+{% endblock %}
+

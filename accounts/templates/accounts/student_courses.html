@@ -1,0 +1,24 @@
+{% extends 'accounts/sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/student_courses.css' %}">
+
+<div class="container">
+    <h1>{{ student.username }}'s Enrolled Courses</h1>
+
+    {% if enrollments %}
+        {% for enrollment in enrollments %}
+            <div class="course-card">
+                <h3>{{ enrollment.course.title }}</h3>
+                <p>Enrolled on: {{ enrollment.date_enrolled|date:"M d, Y, h:i a" }}</p>
+                <a href="{% url 'course-detail' enrollment.course.id %}">View Lessons</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>You are not enrolled in any courses yet.</p>
+    {% endif %}
+</div>
+
+<div>{% include 'accounts/footer.html' %}</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Courses</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+        h1 { color: #333; }
+        .course-card { background: #fff; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        .course-card a { text-decoration: none; color: #007bff; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Available Courses</h1>
+    {% for course in courses %}
+        <div class="course-card">
+            <h3><a href="{% url 'course-detail' course.id %}">{{ course.title }}</a></h3>
+            <p>{{ course.description|truncatewords:20 }}</p>
+        </div>
+    {% empty %}
+        <p>No courses available at the moment.</p>
+    {% endfor %}
+</body>
+</html>

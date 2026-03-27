@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Lessons - {{ course.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/add_lesson.css' %}">
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo">StudentLMS</div>
+    <div class="nav-links">
+        <a href="{% url 'lecturer-dashboard' %}">Dashboard</a>
+        <a href="{% url 'existing-lessons' course.id %}">View Lessons</a>
+
+        
+        <!-- Profile icon with dropdown (links to dashboard & logout) -->
+        <div class="profile">
+            <img src="{% static 'images/profile.png' %}" alt="Profile">
+            <div class="dropdown">
+                <a href="{% url 'lecturer-dashboard' %}">View Profile</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Add Lessons for "{{ course.title }}"</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <label for="id_files">Upload Materials:</label>
+        <input type="file" name="files" multiple><br><br>
+        <button type="submit">Add Lesson</button>
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Chat - {{ course.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .message { margin-bottom: 10px; padding: 8px; border-radius: 5px; }
+        .message.user { background-color: #d1ffd6; }
+        .message.other { background-color: #f0f0f0; }
+        .message-actions { font-size: 12px; margin-top: 2px; }
+        .message-actions a { margin-right: 5px; }
+    </style>
+</head>
+<body>
+<h2>{{ course.title }} - Chat</h2>
+
+<div class="chat-box">
+    {% for msg in messages %}
+        <div class="message {% if msg.user == request.user %}user{% else %}other{% endif %}">
+            <strong>{{ msg.user.username }}</strong>: {{ msg.message }}<br>
+            {% if msg.file %}
+                <a href="{{ msg.file.url }}" target="_blank">[File]</a>
+            {% endif %}
+
+            {% if msg.user == request.user %}
+                <div class="message-actions">
+                    <a href="{% url 'edit-course-message' msg.id %}">Edit</a>
+                    <a href="{% url 'delete-course-message' msg.id %}">Delete</a>
+                </div>
+            {% endif %}
+            <small>{{ msg.timestamp }}</small>
+        </div>
+    {% empty %}
+        <p>No messages yet.</p>
+    {% endfor %}
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <textarea name="message" rows="3" cols="50" placeholder="Type your message here..."></textarea><br>
+    <input type="file" name="file"><br><br>
+    <button type="submit">Send</button>
+</form>
+
+<a href="{% url 'student-dashboard' %}">Back to Dashboard</a>
+</body>
+</html>

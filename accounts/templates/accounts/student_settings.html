@@ -1,0 +1,132 @@
+{% extends 'accounts/sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="main">
+    <div class="card">
+        <h2>Settings</h2>
+
+        <!-- Profile Picture -->
+        <img id="profilePreview" 
+             src="{% if request.user.profile_picture %}{{ request.user.profile_picture.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" 
+             alt="Profile Picture" 
+             style="max-width:150px; border-radius:50%; margin-bottom:10px;">
+
+        <form id="profileForm" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label>Profile Picture:</label>
+            <input type="file" name="profile_picture" id="profileImageInput"><br><br>
+
+            <label>Full Name:</label>
+            <input type="text" name="full_name" value="{{ request.user.get_full_name }}"><br><br>
+
+            <label>Bio:</label>
+            <textarea name="bio">{{ request.user.bio }}</textarea><br><br>
+
+            <label>Nationality:</label>
+            <input type="text" name="nationality" value="{{ request.user.nationality }}"><br><br>
+
+            <label>Date of Birth:</label>
+            <input type="date" name="date_of_birth" value="{{ request.user.date_of_birth }}"><br><br>
+
+            <label>Gender:</label>
+            <input type="text" name="gender" value="{{ request.user.gender }}"><br><br>
+
+            <label>Theme:</label>
+            <select name="theme" id="themeSelect">
+                <option value="light" {% if request.user.theme == 'light' %}selected{% endif %}>Light</option>
+                <option value="dark" {% if request.user.theme == 'dark' %}selected{% endif %}>Dark</option>
+            </select><br><br>
+
+            <label>Language:</label>
+            <select name="language" id="languageSelect">
+                <option value="English" {% if request.user.language == 'English' %}selected{% endif %}>English</option>
+                <option value="French" {% if request.user.language == 'French' %}selected{% endif %}>French</option>
+            </select><br><br>
+
+            <button type="submit">Save Settings</button>
+        </form>
+    </div>
+</div>
+
+<div>{% include 'accounts/footer.html' %}</div>
+
+<script>
+<script>
+const profileForm = document.getElementById('profileForm');
+const profileInput = document.getElementById('profileImageInput');
+const profilePreview = document.getElementById('profilePreview');
+const themeSelect = profileForm.querySelector('select[name="theme"]');
+const languageSelect = profileForm.querySelector('select[name="language"]');
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+// Preview selected image
+profileInput.addEventListener('change', () => {
+    const file = profileInput.files[0];
+    if(file){
+        profilePreview.src = URL.createObjectURL(file);
+    }
+});
+
+// Apply theme and language instantly
+themeSelect.addEventListener('change', () => {
+    document.body.setAttribute('data-theme', themeSelect.value);
+});
+
+languageSelect.addEventListener('change', () => {
+    document.body.setAttribute('data-language', languageSelect.value);
+});
+
+// Submit form via AJAX
+profileForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(profileForm);
+
+    fetch("{% url 'student-settings' %}", {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrftoken
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success){
+            // Update profile picture if changed
+            if(data.profile_picture_url){
+                profilePreview.src = data.profile_picture_url;
+            }
+
+            // Update theme and language attributes
+            document.body.setAttribute('data-theme', themeSelect.value);
+            document.body.setAttribute('data-language', languageSelect.value);
+
+            alert('Settings updated successfully!');
+        } else {
+            alert('Failed to update settings');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+</script>
+
+
+<style>
+/* Theme Styles */
+body[data-theme="light"] {
+    background-color: #f9f9f9;
+    color: #333;
+}
+body[data-theme="dark"] {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+}
+
+/* Optional language styles */
+body[data-language="French"] {
+    font-family: 'Arial', sans-serif;
+}
+</style>
+{% endblock %}

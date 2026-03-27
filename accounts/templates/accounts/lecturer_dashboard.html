@@ -1,0 +1,133 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/lecturer_dashboard.css' %}">
+    <style>
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #1e1e1e;
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            margin-left: 20px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-left: 20px;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #fff;
+            min-width: 150px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .profile-dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo">
+        <strong>StudentLMS</strong>
+    </div>
+    <div class="nav-links">
+        <a href="{% url 'lecturer-dashboard' %}">Dashboard</a>
+
+        <!-- Profile Picture Dropdown -->
+        <div class="profile-dropdown">
+            <img src="{% if request.user.profile_picture %}{{ request.user.profile_picture.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" 
+                 alt="Profile Picture" class="profile-pic">
+            <div class="dropdown-content">
+                <a href="{% url 'lecturer-profile' %}">Profile</a>
+                <a href="{% url 'lecturer-settings' %}">Settings</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main content -->
+<div class="container">
+    <h2>Lecturer Dashboard</h2>
+    <a href="{% url 'create-course' %}" class="btn btn-create">➕ Create New Course</a>
+
+    <h3>Your Courses</h3>
+    <ul class="course-list">
+        {% for course in courses %}
+            <li>
+                <strong>{{ course.title }}</strong> -
+                <a href="{% url 'add-lesson' course.id %}">Add Lesson</a> |
+                <a href="{% url 'view-students' course.id %}">View Students</a>
+
+                {% if course.enrollment_set.exists %}
+                    <ul>
+                        {% for enrollment in course.enrollment_set.all %}
+                            {% if enrollment.student %}
+                                <li>
+                                    {{ enrollment.student.get_full_name|default:enrollment.student.username }}
+                                    - <a href="{% url 'private-chat' enrollment.student.id %}" class="btn btn-chat">💬 Chat</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="no-students">No students enrolled yet.</p>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>No courses yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    &copy; {{ year }} AdornTech LMS. All Rights Reserved.
+</div>
+
+</body>
+</html>

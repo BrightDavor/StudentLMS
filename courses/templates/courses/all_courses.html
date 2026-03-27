@@ -1,0 +1,42 @@
+
+{% load static %}
+
+{% block content %}
+<h2>Lecturer Dashboard</h2>
+<a href="{% url 'create-course' %}" 
+   style="padding: 10px 15px; background:#28a745; color:white; text-decoration:none; border-radius:5px;">
+   ➕ Create New Course
+</a>
+
+<h3>Your Courses</h3>
+<ul>
+    {% for course in courses %}
+        <li style="margin-bottom: 20px;">
+            <strong>{{ course.title }}</strong> -
+            <a href="{% url 'add-lesson' course.id %}">Add Lesson</a> |
+            <a href="{% url 'view-students' course.id %}">View Students</a>
+
+            {% comment %} List enrolled students with chat button {% endcomment %}
+            {% if course.enrollment_set.all %}
+                <ul style="margin-top:10px; margin-left:20px;">
+                    {% for enrollment in course.enrollment_set.all %}
+                        {% if enrollment.student %}
+                            <li>
+                                {{ enrollment.student.get_full_name|default:enrollment.student.username }}
+                                - <a href="{% url 'private-chat' enrollment.student.id %}" 
+                                     style="padding: 5px 10px; background:#007bff; color:white; text-decoration:none; border-radius:5px;">
+                                     💬 Chat
+                                  </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="margin-left:20px; color:#999;">No students enrolled yet.</p>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>No courses yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

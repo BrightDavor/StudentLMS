@@ -1,0 +1,64 @@
+{% load static %}
+
+{% block content %}
+<h2>Edit Lesson: "{{ lesson.title }}" for "{{ course.title }}"</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    {{ form.as_p }}
+
+    <label for="id_files">Upload New Material (optional):</label>
+    <input type="file" name="files" multiple><br><br>
+
+    <button type="submit">Update Lesson</button>
+</form>
+
+<h3>Existing Lesson Details</h3>
+<ul>
+    <li style="margin-bottom: 25px;">
+        <strong>{{ lesson.title }}</strong> — {{ lesson.content|default:"(No description)" }}<br>
+
+        {% comment %} --- Display Uploaded File(s) --- {% endcomment %}
+        {% if lesson.file %}
+            {% with file_url=lesson.file.url|lower %}
+                {% if ".mp4" in file_url or ".mov" in file_url or ".mkv" in file_url %}
+                    <video width="400" controls>
+                        <source src="{{ lesson.file.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                {% elif ".mp3" in file_url or ".wav" in file_url %}
+                    <audio controls>
+                        <source src="{{ lesson.file.url }}" type="audio/mpeg">
+                        Your browser does not support the audio tag.
+                    </audio>
+                {% elif ".pdf" in file_url %}
+                    <iframe src="{{ lesson.file.url }}" width="100%" height="500px"></iframe>
+                {% else %}
+                    <a href="{{ lesson.file.url }}" download>Download File</a>
+                {% endif %}
+            {% endwith %}
+        {% endif %}
+
+        {% comment %} --- Display Video URL if exists --- {% endcomment %}
+        {% if lesson.video_url %}
+            {% if "youtube.com" in lesson.video_url or "youtu.be" in lesson.video_url %}
+                {% with lesson.video_url|cut:"watch?v=" as embed_url %}
+                    <iframe width="400" height="250" src="{{ embed_url|add:'embed/' }}" frameborder="0" allowfullscreen></iframe>
+                {% endwith %}
+            {% else %}
+                <video width="400" controls>
+                    <source src="{{ lesson.video_url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            {% endif %}
+        {% endif %}
+    </li>
+</ul>
+
+<p>
+    <a href="{% url 'add-lesson' course.id %}">Back to Add Lessons</a> |
+    <a href="{% url 'delete-lesson' lesson.id %}" onclick="return confirm('Are you sure you want to delete this lesson?');">Delete Lesson</a>
+</p>
+
+{% endblock %}
