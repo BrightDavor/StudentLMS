@@ -1,0 +1,25 @@
+.chat-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-msg {
+    display: flex;
+    align-items: flex-start;
+}
+
+.chat-msg img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.msg-content {
+    background: #f1f1f1;
+    border-radius: 8px;
+    padding: 10px;
+    max-width: 70%;
+}

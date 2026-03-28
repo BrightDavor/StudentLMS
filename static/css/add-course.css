@@ -1,0 +1,31 @@
+body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+        }
+        .main {
+            margin-left: 240px;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .course-list li {
+            margin-bottom: 10px;
+        }
+        .course-link {
+            text-decoration: none;
+            color: #2575fc;
+            font-weight: bold;
+        }
+        .course-link:hover {
+            text-decoration: underline;
+        }
+        .pending {
+            color: orange;
+            font-style: italic;
+        }
